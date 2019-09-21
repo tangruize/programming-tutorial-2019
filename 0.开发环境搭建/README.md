@@ -7,7 +7,7 @@
 ## [Microsoft Visual Studio](0.0.Microsoft_Visual_Studio.md)
 ![vs_splash](figs/0.0.vs_splash.png)
 
-## [CLion](0.1.Clion.md)
+## [CLion](0.1.CLion.md)
 ![clion_splash](figs/0.1.clion_splash.png)
 
 # 扩展阅读
@@ -19,3 +19,5 @@
 
 下面是一个在Linux平台使用GCC编译一个程序的例子（`#`后面是注释）：<br>
 ![vim_gcc](figs/0.2.vim_gcc.png)
+
+如果对Linux系统感兴趣，可以尝试[装一个Ubuntu虚拟机](0.2.Ubuntu虚拟机.md)。
