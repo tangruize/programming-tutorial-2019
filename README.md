@@ -35,16 +35,17 @@ StackOverflow 是一个在程序设计领域的问答网站，专业性很强。
 ## C++
 - [C++ Primer 第五版](https://www.amazon.com/Primer-5th-Stanley-B-Lippman/dp/0321714113/)（不是C++ Primer Plus，有[中文版](https://www.phei.com.cn/module/goods/wssd_content.jsp?bookid=37655)可以购买）
 - [C++ Tutorials](http://www.cplusplus.com/doc/tutorial/) （非常棒的入门教程）
-- [C++ reference](https://en.cppreference.com/w/cpp) （函数的用法有详细示例代码）
+- [C++ reference](https://zh.cppreference.com/w/cpp) （函数的用法有详细示例代码）
 
 ## Ｃ
 - Ｃ语言程序设计（群文件有）
 - [Linux C编程](http://akaedu.github.io/book/)（前面有Ｃ语言基础，后面是[Linux](https://en.wikipedia.org/wiki/Linux)相关内容）
 - [C Tutorial](https://www.tutorialspoint.com/cprogramming/index.htm)（在线编译运行）
-- [C reference](https://en.cppreference.com/w/c)（函数的用法有详细示例代码）
+- [C reference](https://zh.cppreference.com/w/c)（函数的用法有详细示例代码）
 - [The Linux Programming Interface](http://man7.org/tlpi/index.html) （个人认为学习Linux编程最好的书籍，需要一定C语言基础。[英文版PDF](https://moodle2.units.it/pluginfile.php/115306/mod_resource/content/1/The%20Linux%20Programming%20Interface-Michael%20Kerrisk.pdf)）
 - 强烈不推荐：~~[谭浩强](https://www.zhihu.com/question/22793863)~~
 
 # 其他资源
 - C/C++在线编译调试：[onlinegdb.com](https://www.onlinegdb.com/)
 - C++在线编译运行（可调部分GCC参数）：[cpp.sh](http://cpp.sh/)
+- C代码执行流程可视化：[pythontutor.com/c.html](http://pythontutor.com/c.html)

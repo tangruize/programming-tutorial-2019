@@ -2,7 +2,7 @@
 
 工欲善其事必先利其器，在正式开始学习C/C++语言之前，我们先对开发环境进行配置。本章将介绍两种[集成开发环境（IDE）](https://en.wikipedia.org/wiki/Integrated_development_environment)，两种都推荐安装，选择其中任意一种都可以进行后续的代码编写。如果你对这方面内容熟悉，可以跳过本章节。
 
-**强烈不推荐：~~Dev-C++~~、~~VC 6.0~~**，已经过时太久，计算机软件更新换代很快，使用这些IDE可能会出现与预期结果不符等情况，不利于编写出正确的程序。
+**强烈不推荐：~~VC 6.0~~**，已经过时太久，计算机软件更新换代很快，使用这些IDE可能会出现与预期结果不符等情况，不利于编写出正确的程序。
 
 ## [Microsoft Visual Studio](0.0.Microsoft_Visual_Studio.md)
 ![vs_splash](figs/0.0.vs_splash.png)
