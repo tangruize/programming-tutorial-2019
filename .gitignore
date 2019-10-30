@@ -1,4 +1,8 @@
 *
 !*/
 ![0-9]*/*.md
-![0-9]*/figs/*.png
+![0-9]*/*/*.png
+!Slides/*/*.tex
+!Slides/*/*.bib
+!Slides/*/*/*.tex
+!Slides/*/*/*.png
