@@ -4,7 +4,7 @@ DIR ?=
 VIEWER ?=
 
 ifeq ($(DIR),)
-	AUTODIR = $(wildcard */)
+	AUTODIR = $(wildcard 201*)
 else
 	AUTODIR = $(DIR)
 	ifeq ($(VIEWER),)
