@@ -4,7 +4,7 @@ DIR ?=
 VIEWER ?=
 
 ifeq ($(DIR),)
-	AUTODIR = $(wildcard 201*)
+	AUTODIR = $(wildcard */)
 else
 	AUTODIR = $(DIR)
 	ifeq ($(VIEWER),)
@@ -19,7 +19,7 @@ endif
 TEX = $(filter-out $(wildcard $(AUTODIR:%=%/preamble.tex)),$(wildcard $(AUTODIR:%=%/*.tex)))
 PDF = $(TEX:.tex=.pdf)
 
-pdf: $(PDF)
+slides: $(PDF)
 	@if which "$(VIEWER)" &> /dev/null; then $(VIEWER) $(PDF) & fi
 
 $(PDF): %.pdf: %.tex
@@ -28,5 +28,5 @@ $(PDF): %.pdf: %.tex
 clean:
 	@find $(AUTODIR) -type f ! -name \*.tex -a ! -name \*.bib -a ! -name \*.png -a ! -name Makefile -delete
 
-.DEFAULT_GOAL := pdf
+.DEFAULT_GOAL := slides
 .PHONY: $(PDF)

@@ -1,8 +1,13 @@
 *
 !*/
-![0-9]*/*.md
-![0-9]*/*/*.png
+!CMakeLists.txt
+!Tutorial/*.md
+!Tutorial/*/*.md
+!Tutorial/*/*/*.png
 !Slides/*/*.tex
 !Slides/*/*.bib
 !Slides/*/*/*.tex
 !Slides/*/*/*.png
+!OJ/lib/*
+!OJ/example.*
+/OJ/src/CMakeLists.txt
