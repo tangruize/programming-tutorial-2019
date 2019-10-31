@@ -9,9 +9,12 @@ else
 	AUTODIR = $(DIR)
 	ifeq ($(VIEWER),)
 		ifeq ($(OS),Windows_NT)
+			CMD_PREFIX = cmd /c start /B
 			VIEWER = SumatraPDF.exe
+			CMD_SUFFIX = ;
 		else
 			VIEWER = evince
+			CMD_SUFFIX = &
 		endif
 	endif
 endif
@@ -20,7 +23,7 @@ TEX = $(filter-out $(wildcard $(AUTODIR:%=%/preamble.tex)),$(wildcard $(AUTODIR:
 PDF = $(TEX:.tex=.pdf)
 
 slides: $(PDF)
-	@if which "$(VIEWER)" &> /dev/null; then $(VIEWER) $(PDF) & fi
+	@if which "$(VIEWER)" > /dev/null; then $(CMD_PREFIX) $(VIEWER) $(PDF) $(CMD_SUFFIX) fi
 
 $(PDF): %.pdf: %.tex
 	@cd $(dir $@) && latexmk -use-make -silent -xelatex $(FLAGS) $(notdir $(@:.pdf=.tex))

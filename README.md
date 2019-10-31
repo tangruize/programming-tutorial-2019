@@ -1,6 +1,6 @@
 # programming-tutorial-2019
 
-本项目一个简易的C/C++编程指南，为南京大学计算机系问题求解课程2019级学生准备。往届的编程指南见[problem-solving-class-programming-tutorial](https://github.com/hengxin/problem-solving-class-programming-tutorial)。
+本项目是一个简易的C/C++编程指南，为南京大学计算机系问题求解课程2019级学生准备。往届的编程指南见[problem-solving-class-programming-tutorial](https://github.com/hengxin/problem-solving-class-programming-tutorial)。
 
 项目分为3个子项目：[OJ](OJ)、[Slides](Slides) 和 [Tutorial](Tutorial)，使用cmake管理，可以用CLion打开查看。
 
@@ -28,6 +28,7 @@ git clone https://github.com/tangruize/programming-tutorial-2019  # 需安装git
 cmake -S . -B build  # 初始化cmake，需安装cmake和make
 cd build
 make  # 编译OJ的例子，需安装cc和c++编译器，比如gcc和g++
-make slides  # 编译latex，需安装texlive、latexmk 和 xelatex
+make -j4  # 同上，但同时使用4个线程编译 
+make -j4 slides  # 编译latex，需安装texlive、latexmk 和 xelatex
 make gitbook  # 生成gitbook的html并在本地打开4000端口服务器，需安装gitbook-cli
 ```
