@@ -1,0 +1,53 @@
+\section{数组}\label{sec:数组}
+
+\begin{frame}[fragile]{数组定义}
+    数组是一系列相同类型元素, 放置在一片连续的内存区域.
+    每个元素都能单独被索引到
+
+    定义方式: \texttt{type name [elements][elements];}
+
+    \begin{itemize}[<+- | alert@+>]
+        \item \texttt{type}: 数组类型
+        \item \texttt{name}: 变量名
+        \item \texttt{elements}: 元素个数
+        \item 注意数组元素索引从0开始, 最大索引为 elements-1
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{数组初始化}
+    \begin{lstlisting}[language=c]
+    int foo [5];
+    int foo [5] = { 16, 2, 77, 40, 12071 };
+    int bar [5] = { 10, 20, 30 };
+    int baz [5] = { 0 };
+    int foo [] = { 16, 2, 77, 40, 12071 };
+    \end{lstlisting}
+
+    \begin{itemize}[<+- | alert@+>]
+        \item 第1行, 数组大小为5, 不对数组进行初始化, 可能是随机值, 不能在赋值前使用
+        \item 第2行, 数组大小为5, 所有元素都提供了初值
+        \item 第3行, 数组大小为5, 只提供了一部分初值, 其他的, 即 bar[3] 和 bar[4] 将被初始化为0
+        \item 第4行, 数组大小为5, 所有元素都被初始化为0
+        \item 第5行, 数组大小根据初始化提供的初值个数确定, 即5.
+        如果提供了所有的初值或不需要显式指定元素个数时, 这种初始化比第2行好
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{多维数组}
+    多维数组可以当作是数组的数组, 比如 \texttt{int a[5][5];}
+
+    但本质上仍然是一片连续的内存区域, \texttt{int a[5][5];} 等价于 \texttt{int b[25];}
+
+    获取\texttt{a[3][4]} 等价于 \texttt{b[19]}, 如果两个维度不相同, 如果有三个维度, 你知道怎么算吗?
+\end{frame}
+
+\begin{frame}[fragile]{数组作为函数参数}
+    \begin{itemize}[<+- | alert@+>]
+        \item 函数参数格式: \texttt{type name[][elements][elements]}
+        \item 即除了第一维大小可省略 , 其他维度都要给定大小
+        \item 思考为什么要这样做, 与前面说的多维数组和一维数组等价表示有什么关系?
+        \item 举例 \\
+        函数声明为: \texttt{void procedure(int arg[][3], int n);}\\
+        调用该函数: \texttt{procedure(a, 5);}
+    \end{itemize}
+\end{frame}
