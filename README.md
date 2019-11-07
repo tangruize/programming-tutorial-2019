@@ -15,10 +15,11 @@
 | 日期 | 主题 | 文件 |
 |------------|---------------------|-----------------------------------------------------------------------------------------------------------------------|
 | 2019-10-25 | 环境搭建和C语言入门 | [introduction.pdf](https://github.com/tangruize/programming-tutorial-2019/releases/download/slide_1/introduction.pdf) |
+| 2019-11-01 | 调试技巧, 函数和指针 | [function_array.pdf](https://github.com/tangruize/programming-tutorial-2019/releases/download/slide_2/function_array.pdf) |
 
 ## [Tutorial](Tutorial)
 
-写了一些教程，可以用 [gitbook-cli](https://github.com/GitbookIO/gitbook) 生成 html。目录内只有 markdown 没有 html，可以直接在Github上浏览（[目录](Tutorial/SUMMARY.md)），也可以打开 [problemoverflow.top/c](http://problemoverflow.top/c/)。
+使用markdown编写，可以用 [gitbook-cli](https://github.com/GitbookIO/gitbook) 生成 html。目录内只有 markdown 没有 html，可以直接在Github上浏览（[目录](Tutorial/SUMMARY.md)），也可以打开 [problemoverflow.top/c](http://problemoverflow.top/c/)。
 
 ## 编译
 
@@ -32,3 +33,6 @@ make -j4  # 同上，但同时使用4个线程编译
 make -j4 slides  # 编译latex，需安装texlive、latexmk 和 xelatex
 make gitbook  # 生成gitbook的html并在本地打开4000端口服务器，需安装gitbook-cli
 ```
+
+## 其他
+线下程设辅导斗鱼房间号: [7725816](https://www.douyu.com/7725816), 开播时间: 每周五 20:30-22:00
