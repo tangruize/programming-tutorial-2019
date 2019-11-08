@@ -3,6 +3,7 @@ FLAGS = -file-line-error -synctex=1 -interaction=nonstopmode
 DIR ?=
 VIEWER ?=
 
+CMD_SUFFIX = &
 ifeq ($(DIR),)
 	AUTODIR = $(wildcard 201*)
 else
@@ -14,7 +15,6 @@ else
 			CMD_SUFFIX = ;
 		else
 			VIEWER = evince
-			CMD_SUFFIX = &
 		endif
 	endif
 endif
@@ -23,7 +23,7 @@ TEX = $(filter-out $(wildcard $(AUTODIR:%=%/preamble.tex)),$(wildcard $(AUTODIR:
 PDF = $(TEX:.tex=.pdf)
 
 slides: $(PDF)
-	@if which "$(VIEWER)" > /dev/null; then $(CMD_PREFIX) $(VIEWER) $(PDF) $(CMD_SUFFIX) fi
+	@if which "$(VIEWER)" &> /dev/null; then $(CMD_PREFIX) $(VIEWER) $(PDF) $(CMD_SUFFIX) fi
 
 $(PDF): %.pdf: %.tex
 	@cd $(dir $@) && latexmk -use-make -silent -xelatex $(FLAGS) $(notdir $(@:.pdf=.tex))

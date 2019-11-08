@@ -15,7 +15,8 @@
 | 日期 | 主题 | 文件 |
 |------------|---------------------|-----------------------------------------------------------------------------------------------------------------------|
 | 2019-10-25 | 环境搭建和C语言入门 | [introduction.pdf](https://github.com/tangruize/programming-tutorial-2019/releases/download/slide_1/introduction.pdf) |
-| 2019-11-01 | 调试技巧, 函数和指针 | [function_array.pdf](https://github.com/tangruize/programming-tutorial-2019/releases/download/slide_2/function_array.pdf) |
+| 2019-11-01 | 调试技巧, 函数和数组 | [function_array.pdf](https://github.com/tangruize/programming-tutorial-2019/releases/download/slide_2/function_array.pdf) |
+| 2019-11-08 | 指针和动态内存 | [pointer_memory.pdf](https://github.com/tangruize/programming-tutorial-2019/releases/download/slide_3/pointer_memory.pdf) |
 
 ## [Tutorial](Tutorial)
 
