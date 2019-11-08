@@ -1,0 +1,229 @@
+\section{指针}\label{sec:指针}
+
+\begin{frame}[fragile]{指针是什么?}
+    源代码可从\href{http://problemoverflow.top/download/pointer.zip}{problemoverflow.top/download}下载
+    \emptyline
+    \begin{columns}[T,onlytextwidth]
+        \column{0.30\textwidth}
+        \scriptsize
+        \begin{lstlisting}[language=c,numbers=left]
+#include <stdio.h>
+int main() {
+    int a;
+    scanf("%d", &a);
+    printf("%d\n", a);
+}
+        \end{lstlisting}
+
+        \column{0.70\textwidth}
+        \begin{itemize}[<+- | alert@+>]
+            \item 观察代码第4行和第5行, 同样使用变量a, 有什么不同?
+            \item 如果将第4行的 \texttt{\&} 去掉, 会发生什么? (你可能已经试过)
+            \item 我们将代码可视化, 看看使用 \texttt{\&} 发生了什么: \href{http://pythontutor.com/c.html#code=\%23include\%20\%3Cstdio.h\%3E\%0A\%0Aint\%20main\%20\%28\%29\%0A\%7B\%0A\%20\%20int\%20firstvalue,\%20secondvalue\%3B\%0A\%20\%20int\%20*\%20mypointer\%3B\%0A\%0A\%20\%20mypointer\%20\%3D\%20\%26firstvalue\%3B\%0A\%20\%20*mypointer\%20\%3D\%2010\%3B\%0A\%20\%20mypointer\%20\%3D\%20\%26secondvalue\%3B\%0A\%20\%20*mypointer\%20\%3D\%2020\%3B\%0A\%20\%20printf\%28\%22firstvalue\%20is\%20\%25d\%5Cn\%22,\%20firstvalue\%29\%3B\%0A\%20\%20printf\%28\%22secondvalue\%20is\%20\%25d\%5Cn\%22,\%20secondvalue\%29\%3B\%0A\%20\%20return\%200\%3B\%0A\%7D&mode=edit&origin=opt-frontend.js&py=c&rawInputLstJSON=\%5B\%5D}{http://pythontutor.com/c.html}
+        \end{itemize}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{指针是什么?}
+    \begin{itemize}[<+- | alert@+>]
+        \item 变量被解释为计算机一块内存区域, 可以通过变量名访问到, 程序员不用关心数据存在哪里
+        \item 计算机内存就像连续的存储单元, 1个单元为1字节, 每个单元都有一个唯一的地址
+        \item 当变量被声明的时候, 编译器为它分配了一个特定的内存地址
+        \item 指针同样是一个变量, 它存储的值是其他变量的地址 (思考32位和64位系统指针占用的字节长度?)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{取地址操作符\texttt{\&}}
+    \begin{itemize}[<+- | alert@+>]
+        \item 变量的地址可以通过 取地址操作符\texttt{\&} 获得
+        \item \texttt{p = \&a;} 将a的地址赋给p
+        \item \texttt{printf("\%p", \&a);} 打印a的地址.
+        (多次运行程序输出地址是相同的吗?
+        调试模式下可能没有效果, 感兴趣可以搜索\href{https://en.wikipedia.org/wiki/Address_space_layout_randomization}{ASLR})
+        \item 得到了地址, 如何得到地址指向的变量值呢?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{解引用操作符\texttt{*}}
+    \begin{itemize}[<+- | alert@+>]
+        \item 对指针进行解引用可以直接访问指向的变量
+        \item \texttt{*p = 10;} 将p指向的变量赋值为10
+        \item \texttt{b = *p;} 将p指向的变量的值赋给b
+        \item 取地址操作符\texttt{\&} 和 解引用操作符\texttt{*} 刚好是相反的含义
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{指针声明和初始化}
+    \begin{itemize}[<+- | alert@+>]
+        \item 指针同样是变量, 如何与其他变量声明区分开?
+        \item 如何声明不同类型的指针?
+        \item 对指针解引用时, 如何知道被解引用的地址的类型?
+        \item 声明格式: \texttt{type * name;}
+        \begin{verbatim}
+    int * number;
+    char * character;
+    double * decimals;
+        \end{verbatim}
+        \item 初始化:
+        \begin{verbatim}
+    int a;
+    int *p = &a;
+        \end{verbatim}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{指针和数组}
+    \begin{quote}
+        In C, there is a strong relationship between pointers and arrays, strong enough that pointers and arrays should be discussed simultaneously.
+
+        \hspace*{\fill} ---K\&R
+    \end{quote}
+\end{frame}
+
+\begin{frame}[fragile]{指针和数组}
+    \begin{itemize}[<+- | alert@+>]
+        \item 数组工作方式就像一个指向了该数组头元素地址的指针
+        \item 数组能隐式转换为相应类型的指针
+        \begin{verbatim}
+    int array [20];
+    int * pointer;
+    pointer = array;
+        \end{verbatim}
+        \item 不同的是, 指针能改变指向的值(因为是变量), 而数组不能, 下面的代码是不合法的:
+        \begin{verbatim}
+    array = pointer;
+        \end{verbatim}
+        \item 代码可视化: \href{http://pythontutor.com/c.html#code=\%23include\%20\%3Cstdio.h\%3E\%0A\%0Aint\%20main\%20\%28\%29\%0A\%7B\%0A\%20\%20int\%20numbers\%5B5\%5D\%3B\%0A\%20\%20int\%20*\%20p\%3B\%0A\%0A\%20\%20p\%20\%3D\%20numbers\%3B\%0A\%20\%20*p\%20\%3D\%2010\%3B\%0A\%0A\%20\%20p\%2B\%2B\%3B\%0A\%20\%20*p\%20\%3D\%2020\%3B\%0A\%0A\%20\%20p\%20\%3D\%20\%26numbers\%5B2\%5D\%3B\%0A\%20\%20*p\%20\%3D\%2030\%3B\%0A\%0A\%20\%20p\%20\%3D\%20numbers\%20\%2B\%203\%3B\%0A\%20\%20*p\%20\%3D\%2040\%3B\%0A\%0A\%20\%20p\%20\%3D\%20numbers\%3B\%0A\%20\%20*\%28p\%2B4\%29\%20\%3D\%2050\%3B\%0A\%0A\%20\%20for\%20\%28int\%20n\%3D0\%3B\%20n\%3C5\%3B\%20n\%2B\%2B\%29\%0A\%20\%20\%20\%20printf\%28\%22\%25d,\%20\%22,\%20numbers\%5Bn\%5D\%29\%3B\%0A\%20\%20return\%200\%3B\%0A\%7D\%0A&mode=edit&origin=opt-frontend.js&py=c&rawInputLstJSON=\%5B\%5D}{http://pythontutor.com/c.html}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{指针运算}
+    \begin{itemize}[<+- | alert@+>]
+        \item 指针仅支持加减操作
+        \item 指针的加减操作与整型的不太一样, 且指针类型不同也会不同
+        \item 执行下面的代码(\href{http://pythontutor.com/c.html#code=\%23include\%20\%3Cstdio.h\%3E\%0A\%0Aint\%20main\%28\%29\%20\%7B\%0A\%20\%20char\%20*mychar\%20\%3D\%20\%28char\%20*\%290x1000\%3B\%0A\%20\%20short\%20*myshort\%20\%3D\%20\%28short\%20*\%290x2000\%3B\%0A\%20\%20int\%20*myint\%20\%3D\%20\%28int\%20*\%290x3000\%3B\%0A\%20\%20\%2B\%2Bmychar\%3B\%0A\%20\%20\%2B\%2Bmyshort\%3B\%0A\%20\%20\%2B\%2Bmyint\%3B\%0A\%20\%20printf\%28\%22mychar\%3A\%20\%25p\%5Cn\%22,\%20\%28void\%20*\%29mychar\%29\%3B\%0A\%20\%20printf\%28\%22myshort\%3A\%20\%25p\%5Cn\%22,\%20\%28void\%20*\%29myshort\%29\%3B\%0A\%20\%20printf\%28\%22myint\%3A\%20\%25p\%5Cn\%22,\%20\%28void\%20*\%29myint\%29\%3B\%0A\%7D&mode=edit&origin=opt-frontend.js&py=c&rawInputLstJSON=\%5B\%5D}{可视化}):
+        \scriptsize\begin{lstlisting}[language=c]
+#include <stdio.h>
+
+int main() {
+    char *mychar = (char *)0x1000;
+    short *myshort = (short *)0x2000;
+    int *myint = (int *)0x3000;
+    ++mychar;
+    ++myshort;
+    ++myint;
+    printf("mychar: %p\n", (void *)mychar);
+    printf("myshort: %p\n", (void *)myshort);
+    printf("myint: %p\n", (void *)myint);
+}
+        \end{lstlisting}
+        \item 假设: char 1 byte, short 2 bytes, int 4 bytes, 代码输出是什么?
+        \item 代码中将指针(强行)指向了不存在的地址, 因为指针是变量, 这是允许的, 但不能解引用
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{指针运算}
+    容易混淆的操作:
+    \scriptsize\begin{verbatim}
+*p++;   // 等价于 *(p++): 指针自增, 解引用自增前的值
+*++p;   // 等价于 *(++p): 指针自增, 解引用自增后的值
+++*p;   // 等价于 ++(*p): 解引用指针, 自增指向的变量的值, 并得到自增后的值
+(*p)++; // 解引用指针,  自增指向的变量的值, 并得到自增前的值
+*p++ = *q++;  // 这一句什么意思?
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{const指针}
+    \begin{itemize}[<+- | alert@+>]
+        \item 如何指向一个常量或变量但不允许通过指针改变它?
+        \item 如何声明一个指针, 不能改变指向地址, 可以改变指向地址的值?
+        \emptyline
+        \item \texttt{const type * name;} 或 \texttt{type const * name;}
+        \scriptsize\begin{verbatim}
+int x;
+int y = 10;
+const int * p = &y;
+x = *p;  // ok: 可以读取指向地址的值
+*p = x;  // error: 不能修改指向地址的值
+p = &x;  // ok: 可以修改指向的地址
+        \end{verbatim}
+        \item \texttt{type * const name;}
+        \scriptsize\begin{verbatim}
+int x;
+int y = 10;
+int * const p = &y;
+x = *p;  // ok: 可以读取指向地址的值
+*p = x;  // ok: 可以修改指向地址的值
+p = &x;  // error: 不能修改指向的地址
+        \end{verbatim}
+        \item \texttt{const type * const name;} 是什么意思?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{指向指针的指针}
+    \begin{itemize}[<+- | alert@+>]
+        \item 指针是变量, 变量有地址, 该地址仍可被其他指针指向
+        \item 一个简单的例子: (\href{http://pythontutor.com/c.html#code=\%23include\%20\%3Cstdio.h\%3E\%0A\%0Aint\%20main\%28\%29\%20\%7B\%0A\%20\%20char\%20a\%3B\%0A\%20\%20char\%20*b\%3B\%0A\%20\%20char\%20**c\%3B\%0A\%20\%20a\%20\%3D\%20'x'\%3B\%0A\%20\%20b\%20\%3D\%20\%26a\%3B\%0A\%20\%20c\%20\%3D\%20\%26b\%3B\%0A\%0A\%20\%20printf\%28\%22\%25c\%5Cn\%22,\%20**c\%29\%3B\%0A\%20\%20return\%200\%3B\%0A\%7D&mode=edit&origin=opt-frontend.js&py=c&rawInputLstJSON=\%5B\%5D}{可视化})
+        \begin{verbatim}
+    char a;
+    char *b;
+    char **c;
+    a = 'x';
+    b = &a;
+    c = &b;
+        \end{verbatim}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{void指针}
+    \begin{itemize}[<+- | alert@+>]
+        \item 前面的指针都有特定类型, 而void表示无类型, 那void指针有什么用?
+        \item void指针指向的地址表示不确定解引用的类型, 不确定字节长度
+        \item 可以对void指针强制类型转换, 赋给一个确定类型的指针
+        \item void指针常用于参数传递, 比如 printf 的 \%p 应接受的参数类型是 void *
+        \item 示例代码(\href{http://pythontutor.com/c.html#code=\%23include\%20\%3Cstdio.h\%3E\%0A\%0Avoid\%20increase\%28void\%20*data,\%20int\%20psize\%29\%20\%7B\%0A\%20\%20if\%20\%28psize\%20\%3D\%3D\%20sizeof\%28char\%29\%29\%20\%7B\%0A\%20\%20\%20\%20char\%20*pchar\%3B\%0A\%20\%20\%20\%20pchar\%20\%3D\%20\%28char\%20*\%29\%20data\%3B\%0A\%20\%20\%20\%20\%2B\%2B\%28*pchar\%29\%3B\%0A\%20\%20\%7D\%20else\%20if\%20\%28psize\%20\%3D\%3D\%20sizeof\%28int\%29\%29\%20\%7B\%0A\%20\%20\%20\%20int\%20*pint\%3B\%0A\%20\%20\%20\%20pint\%20\%3D\%20\%28int\%20*\%29\%20data\%3B\%0A\%20\%20\%20\%20\%2B\%2B\%28*pint\%29\%3B\%0A\%20\%20\%7D\%0A\%7D\%0A\%0Aint\%20main\%28\%29\%20\%7B\%0A\%20\%20char\%20a\%20\%3D\%20'A'\%3B\%0A\%20\%20int\%20b\%20\%3D\%201108\%3B\%0A\%20\%20increase\%28\%26a,\%20sizeof\%28a\%29\%29\%3B\%0A\%20\%20increase\%28\%26b,\%20sizeof\%28b\%29\%29\%3B\%0A\%20\%20printf\%28\%22\%25c\%20\%25d\%5Cn\%22,\%20a,\%20b\%29\%3B\%0A\%20\%20return\%200\%3B\%0A\%7D&mode=edit&origin=opt-frontend.js&py=c&rawInputLstJSON=\%5B\%5D}{可视化}):
+        \scriptsize\begin{verbatim}
+void increase (void* data, int psize) {
+    if ( psize == sizeof(char) )
+    { char* pchar; pchar=(char*)data; ++(*pchar); }
+    else if (psize == sizeof(int) )
+    { int* pint; pint=(int*)data; ++(*pint); }
+}
+        \end{verbatim}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{野指针和空指针}
+    \begin{itemize}[<+- | alert@+>]
+        \item 指向非法地址的指针:
+        \scriptsize\begin{verbatim}
+    int a[10];
+    int * p;           // 未初始化的局部变量
+    int * q = a + 20;  // 超出数组边界
+    int * r = (int *)0x1234  // 指向一个未知地址
+        \end{verbatim}
+        \item 但以上的3个指针初始化操作都不会造成错误
+        \item 指针指向的地址可以为任意值, 但解引用不合法地址就会造成错误
+        \item 有时候, 我们需要将一个指针显式地表示为不指向任何地址: \texttt{int *p = NULL;}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{函数指针}
+    \begin{itemize}[<+- | alert@+>]
+        \item 变量存储在内存中, 有地址, 那函数呢?
+        \item 函数也有地址, 并且可以用函数指针指向它
+        \item 示例代码(\href{http://pythontutor.com/c.html#code=\%23include\%20\%3Cstdio.h\%3E\%0A\%0Aint\%20addition\%20\%28int\%20a,\%20int\%20b\%29\%0A\%7B\%20return\%20a\%20\%2B\%20b\%3B\%20\%7D\%0A\%0Aint\%20subtraction\%20\%28int\%20a,\%20int\%20b\%29\%0A\%7B\%20return\%20a\%20-\%20b\%3B\%20\%7D\%0A\%0Aint\%20multiplication\%28int\%20a,\%20int\%20b\%29\%0A\%7B\%20return\%20a\%20*\%20b\%3B\%20\%7D\%0A\%0Aint\%20operation\%20\%28int\%20x,\%20int\%20y,\%20int\%20\%28*func\%29\%28int,\%20int\%29\%29\%20\%7B\%0A\%20\%20int\%20g\%3B\%0A\%20\%20g\%20\%3D\%20\%28*func\%29\%28x,\%20y\%29\%3B\%0A\%20\%20return\%20g\%3B\%0A\%7D\%0A\%0Aint\%20main\%20\%28\%29\%20\%7B\%0A\%20\%20int\%20m,\%20n\%3B\%0A\%20\%20char\%20t\%3B\%0A\%20\%20int\%20\%28*minus\%29\%28int,int\%29\%20\%3D\%20subtraction\%3B\%0A\%20\%20int\%20\%28*funcs\%5B\%5D\%29\%28int,\%20int\%29\%20\%3D\%20\%7Bmultiplication,\%20addition\%7D\%3B\%0A\%0A\%20\%20m\%20\%3D\%20operation\%20\%288,\%203,\%20addition\%29\%3B\%0A\%20\%20n\%20\%3D\%20operation\%20\%2820,\%20m,\%20minus\%29\%3B\%0A\%0A\%20\%20printf\%28\%22\%25d\%20\%25d\%5Cn\%22,\%20m,\%20n\%29\%3B\%0A\%0A\%20\%20while\%20\%28scanf\%28\%22\%25d\%20\%25d\%20\%25c\%22,\%20\%26m,\%20\%26n,\%20\%26t\%29\%20\%3D\%3D\%203\%29\%0A\%20\%20\%20\%20printf\%28\%22\%25d\%20\%25c\%20\%25d\%20\%3D\%20\%25d\%5Cn\%22,\%20m,\%20t,\%20n,\%20funcs\%5Bt\%20-\%20'*'\%5D\%28m,\%20n\%29\%29\%3B\%0A\%0A\%20\%20return\%200\%3B\%0A\%7D&mode=edit&origin=opt-frontend.js&py=c&rawInputLstJSON=\%5B\%5D}{可视化}):
+        \scriptsize\begin{lstlisting}[language=c]
+#include <stdio.h>
+
+int subtraction (int a, int b) {
+    return a - b;
+}
+
+int main () {
+    int (*minus)(int,int) = subtraction;
+    printf("20 - 11 = %d\n", (*minus)(20, 11));
+}
+        \end{lstlisting}
+    \end{itemize}
+\end{frame}

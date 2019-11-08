@@ -1,0 +1,139 @@
+\section{动态内存}\label{sec:动态内存}
+
+\begin{frame}[fragile]{动态内存}
+    \begin{itemize}[<+- | alert@+>]
+        \item 前面写的程序使用固定大小的数组, 对于输入规模变化的情况怎么办?
+        \item 需要动态分配内存空间!
+        \item 本节主要介绍四个函数: \texttt{malloc}, \texttt{calloc}, \texttt{realloc}, \texttt{free}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{栈区(Stack)和堆区(Heap)}
+    \begin{itemize}[<+- | alert@+>]
+        \item 一个函数调用产生一个栈帧, 栈帧中存储的局部变量的大小一般在编译时确定, 且生存期与函数调用期间内
+        \item 堆区存储了动态分配的内存, 该内存区域中的变量生存期不随函数调用变化
+        \item 更多讨论: \href{https://stackoverflow.com/questions/79923/what-and-where-are-the-stack-and-heap}{stackoverflow.com}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{malloc}
+    \scriptsize\begin{lstlisting}[language=c]
+#include <stdlib.h>
+void *malloc(size_t size);
+  // Returns pointer to allocated memory on success, or NULL on error
+    \end{lstlisting}
+    \normalsize
+    \begin{itemize}[<+- | alert@+>]
+        \item \texttt{malloc} 接受参数size, 表示需分配空间大小的\textbf{字节数}
+        \item 返回一个void *指针指向从堆区分配的\textbf{未初始化}内存区域, 或NULL表示错误
+        \item 如果size为0, Linux的行为是返回一个指针指向一块小的内存区域而不是NULL
+        \item 示例代码:
+        \scriptsize\begin{verbatim}
+    int * p = (int *)malloc(1024 * sizeof(int));
+        \end{verbatim}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{calloc}
+    \scriptsize\begin{lstlisting}[language=c]
+#include <stdlib.h>
+void *calloc(size_t numitems , size_t size);
+  // Returns pointer to allocated memory on success, or NULL on error
+    \end{lstlisting}
+    \normalsize
+    \begin{itemize}[<+- | alert@+>]
+        \item 注意到malloc只有一个size参数, 且不会初始化分配的内存
+        \item calloc用于从堆区分配一个数组, 有numitems个元素, 每个元素大小为size
+        \item calloc将分配的内存区域初始化为0
+        \item calloc返回值与malloc相同
+        \item 示例代码:
+        \scriptsize\begin{verbatim}
+    struct { /* Some field definitions */ } myStruct;
+    struct myStruct *p;
+    p = calloc(1000, sizeof(struct myStruct));
+        \end{verbatim}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{realloc}
+    \scriptsize\begin{lstlisting}[language=c]
+#include <stdlib.h>
+void *realloc(void * ptr , size_t size);
+  // Returns pointer to allocated memory on success, or NULL on error
+    \end{lstlisting}
+    \normalsize
+    \begin{itemize}[<+- | alert@+>]
+        \item 从函数名不难猜出, 该函数用于对已经分配的内存区域调整大小
+        \item 参数 ptr 是之前调用 malloc, calloc 或 realloc 的返回值, 该指针指向内存区域大小将被调整为size字节
+        \item 返回值与malloc相同
+        \item 如果调大size, realloc会尝试合并相邻内存区域, 如果不能合并则会重新分配内存并将原来的数据复制到新的区域, 增加的内存区域不会被初始化
+        \item 示例代码:
+        \scriptsize\begin{verbatim}
+    nptr = realloc(ptr, newsize);
+    if (nptr == NULL) {
+        /* Handle error */
+    } else {  /* realloc() succeeded */
+        ptr = nptr;
+    }
+        \end{verbatim}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{free}
+    \scriptsize\begin{lstlisting}[language=c]
+#include <stdlib.h>
+void free(void * ptr);
+    \end{lstlisting}
+    \normalsize
+    \begin{itemize}[<+- | alert@+>]
+        \item 用于归还malloc, calloc, realloc分配的内存ptr
+        \item ptr如果为NULL, 则free什么也不做
+        \item 使用free后尽量将ptr赋值为NULL, 避免重复free (会造成内存corruption)
+        \item 内存安全的程序应该free掉不使用的内存, 避免内存泄漏
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{与众不同的alloca}
+    \scriptsize\begin{lstlisting}[language=c]
+#include <alloca.h>  // or `malloc.h' in VS
+void *alloca(size_t size);
+  // Returns pointer to allocated block of memory
+    \end{lstlisting}
+    \normalsize
+    \begin{itemize}[<+- | alert@+>]
+        \item 前面的malloc, calloc, realloc都从堆区分配空间, 且必须用free将不使用的内存归还
+        \item alloca参数和返回值与malloc类似, 但从栈区分配空间, 该区域的生命期与局部变量相同
+        \item alloca分配的空间不需要也不能用free去释放
+        \item alloca原理: 正在调用的函数栈帧位于栈顶, 栈帧还可以扩展, 因此不能这样用alloca:
+        \scriptsize\begin{verbatim}
+    func(x, alloca(size), z);  /* WRONG! */
+        \end{verbatim}
+        \item 正确的做法是:
+        \scriptsize\begin{verbatim}
+    void *y;
+    y = alloca(size);
+    func(x, y, z);
+        \end{verbatim}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{alloca相比于堆区分配空间的优势}
+    \begin{itemize}[<+- | alert@+>]
+        \item 快: 在栈区分配空间只需要简单调大栈指针, 只需要几条机器指令
+        \item 自动释放空间: 函数返回空间自动释放
+        \item 有的函数调用不可避免造成动态内存区域泄露, 比如使用longjmp()函数进行非本地跳转, alloca自动释放空间更安全
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{malloc是如何实现的?}
+    \begin{center}
+        请听下回分解
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{malloc是如何实现的?}
+    \begin{center}
+        请听下回分解 \\
+        \tiny 剧透一下是用链表实现的
+    \end{center}
+\end{frame}
