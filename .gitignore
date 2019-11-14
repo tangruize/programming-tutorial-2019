@@ -12,3 +12,4 @@
 !OJ/lib/*
 !OJ/example.*
 /OJ/src/CMakeLists.txt
+!/OJ/my_malloc/*
