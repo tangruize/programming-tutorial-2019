@@ -19,3 +19,7 @@ add_custom_target(slides-function_array.pdf
 add_custom_target(slides-pointer_memory.pdf
         COMMAND $(MAKE) DIR=2019-11-08_Pointer_Memory
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+
+add_custom_target(slides-struct_malloc.pdf
+        COMMAND $(MAKE) DIR=2019-11-15_Struct_Malloc
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})

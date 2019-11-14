@@ -1,0 +1,101 @@
+\section{结构体}\label{sec:结构体}
+
+\begin{frame}[fragile]{结构体是什么?}
+    \begin{itemize}[<+- | alert@+>]
+        \item 假如要存很多人的信息, 每个人信息包括姓名, 学号等, 如何存储?
+        \item 我们学过数组!
+        \item 那就定义很多数组: 姓名数组, 学号数组, 年龄数组\ldots
+        \item 但这样太麻烦了, 如果信息很多, 代码也会变得十分难懂
+        \item 要是能有一种类型, 能存一个人的所有信息就好了
+        \item 结构体!
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{如何定义结构体}
+    \begin{itemize}[<+- | alert@+>]
+        \item 结构体正如其名, 它把一组元素装进一个类型里, 元素被称为成员
+        \item 语法:
+        \begin{verbatim}
+struct type_name {
+    member_type1 member_name1;
+    member_type2 member_name2;
+    member_type3 member_name3;
+    .
+    .
+} object_names;
+        \end{verbatim}
+        \item type\_name 是结构体的类型名, 但使用这个类型需要加上 struct
+        \item object\_names 可以是用逗号隔开的多个变量名
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{结构体定义示例}
+    \begin{itemize}[<+- | alert@+>]
+        \item 省略 object\_names, 可以用 \texttt{struct type\_name} 定义变量:
+        \scriptsize\begin{verbatim}
+struct person_t {
+    char name[20];
+    int age;
+};
+struct person_t alice, bob;
+        \end{verbatim}
+        \item 可以使用 typedef 简化掉 struct:
+        \scriptsize\begin{verbatim}
+typedef struct person_t person_t;
+person_t alice, bob;
+        \end{verbatim}
+        \item 省略 type\_name, 将不能再用该结构体定义别的变量(没有类型名):
+        \scriptsize\begin{verbatim}
+struct {
+    char name[20];
+    int age;
+} alice, bob;
+        \end{verbatim}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{访问结构体成员}
+    \begin{itemize}[<+- | alert@+>]
+        \item 通过点\texttt{.}访问, 即 \texttt{object\_name.member}, 举例:
+        \begin{verbatim}
+            alice.age = 20;
+            bob.age = 22;
+        \end{verbatim}
+        \item 结构体指针通过\texttt{->}访问, 即 \texttt{object\_ptr->member}, 举例:
+        \begin{verbatim}
+            struct person_t *p = &alice;
+            p->age = 20;
+        \end{verbatim}
+        \item \texttt{object\_ptr->member} 等价于 \texttt{*(object\_ptr).member}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{链表}
+    \begin{itemize}[<+- | alert@+>]
+        \item 结构体中可包含其类型的指针(但不能包含其自身), 从而形成链表:
+        \begin{verbatim}
+struct forward_list {
+    int data;
+    forward_list *next;
+};
+        \end{verbatim}
+        \item \href{http://pythontutor.com/c.html#code=\%23include\%20\%3Cstdio.h\%3E\%0A\%23include\%20\%3Cstdlib.h\%3E\%0A\%0Astruct\%20forward_list\%20\%7B\%0A\%20\%20int\%20data\%3B\%0A\%20\%20struct\%20forward_list\%20*next\%3B\%0A\%7D\%20_head,\%20*head\%20\%3D\%20\%26_head,\%20*tail\%20\%3D\%20\%26_head\%3B\%0A\%0Atypedef\%20struct\%20forward_list\%20forward_list\%3B\%0A\%0Aint\%20main\%28\%29\%20\%7B\%0A\%20\%20for\%20\%28int\%20i\%20\%3D\%200\%3B\%20i\%20\%3C\%203\%3B\%20\%2B\%2Bi\%29\%20\%7B\%0A\%20\%20\%20\%20tail-\%3Enext\%20\%3D\%20\%28forward_list\%20*\%29malloc\%28sizeof\%28forward_list\%29\%29\%3B\%0A\%20\%20\%20\%20tail\%20\%3D\%20tail-\%3Enext\%3B\%0A\%20\%20\%20\%20tail-\%3Edata\%20\%3D\%20i\%3B\%0A\%20\%20\%20\%20tail-\%3Enext\%20\%3D\%20NULL\%3B\%0A\%20\%20\%7D\%0A\%20\%20for\%20\%28forward_list\%20*p\%20\%3D\%20head-\%3Enext,\%20*q\%20\%3D\%20p\%3B\%20p\%20!\%3D\%20NULL\%3B\%20q\%20\%3D\%20p\%29\%20\%7B\%0A\%20\%20\%20\%20printf\%28\%22\%25d\%5Cn\%22,\%20p-\%3Edata\%29\%3B\%0A\%20\%20\%20\%20p\%20\%3D\%20p-\%3Enext\%3B\%0A\%20\%20\%20\%20free\%28q\%29\%3B\%0A\%20\%20\%20\%20head-\%3Enext\%20\%3D\%20p\%3B\%0A\%20\%20\%20\%20if\%20\%28tail\%20\%3D\%3D\%20q\%29\%0A\%20\%20\%20\%20\%20\%20tail\%20\%3D\%20head\%3B\%0A\%20\%20\%7D\%0A\%7D&mode=edit&origin=opt-frontend.js&py=c&rawInputLstJSON=\%5B\%5D}{可视化样例}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{双向链表}
+    \begin{itemize}[<+- | alert@+>]
+        \item forward\_list 只能向后遍历, 不能向前
+        \item 如果在链表中间插入删除元素, 需要维护前一个结点的next信息, forward\_list 难以高效插入删除
+        \item 多加一个指向前一个结点的指针不就好了!
+        \item 于是我们得到了双向链表, 这是计算机中用空间换时间的典型案例
+        \begin{verbatim}
+struct list {
+    int data;
+    struct list *previous;
+    struct list *next;
+};
+        \end{verbatim}
+        \item \href{http://pythontutor.com/c.html#code=\%23include\%20\%3Cstdio.h\%3E\%0A\%23include\%20\%3Cstdlib.h\%3E\%0A\%0Astruct\%20list\%20\%7B\%0A\%20\%20int\%20data\%3B\%0A\%20\%20struct\%20list\%20*previous\%3B\%0A\%20\%20struct\%20list\%20*next\%3B\%0A\%7D\%20_head,\%20*head\%20\%3D\%20\%26_head,\%20*tail\%20\%3D\%20\%26_head\%3B\%0A\%0Atypedef\%20struct\%20list\%20list\%3B\%0A\%0Avoid\%20insert_node\%28list\%20*p,\%20int\%20data\%29\%20\%7B\%0A\%20\%20list\%20*node\%20\%3D\%20\%28list\%20*\%29malloc\%28sizeof\%28list\%29\%29\%3B\%0A\%20\%20node-\%3Edata\%20\%3D\%20data\%3B\%0A\%20\%20node-\%3Eprevious\%20\%3D\%20p\%3B\%0A\%20\%20node-\%3Enext\%20\%3D\%20p-\%3Enext\%3B\%0A\%20\%20if\%20\%28p-\%3Enext\%29\%0A\%20\%20\%20\%20p-\%3Enext-\%3Eprevious\%20\%3D\%20node\%3B\%0A\%20\%20else\%0A\%20\%20\%20\%20tail\%20\%3D\%20node\%3B\%0A\%20\%20p-\%3Enext\%20\%3D\%20node\%3B\%0A\%7D\%0A\%0Avoid\%20delete_node\%28list\%20*p\%29\%20\%7B\%0A\%20\%20p-\%3Eprevious-\%3Enext\%20\%3D\%20p-\%3Enext\%3B\%0A\%20\%20if\%20\%28p-\%3Enext\%29\%0A\%20\%20\%20\%20p-\%3Enext-\%3Eprevious\%20\%3D\%20p-\%3Eprevious\%3B\%0A\%20\%20else\%0A\%20\%20\%20\%20tail\%20\%3D\%20p-\%3Eprevious\%3B\%0A\%20\%20free\%28p\%29\%3B\%0A\%7D\%0A\%0Aint\%20main\%28\%29\%20\%7B\%0A\%20\%20for\%20\%28int\%20i\%20\%3D\%200\%3B\%20i\%20\%3C\%203\%3B\%20\%2B\%2Bi\%29\%0A\%20\%20\%20\%20insert_node\%28tail,\%20i\%29\%3B\%0A\%20\%20for\%20\%28list\%20*p\%20\%3D\%20head-\%3Enext\%3B\%20p\%20!\%3D\%20NULL\%3B\%20p\%20\%3D\%20p-\%3Enext\%29\%0A\%20\%20\%20\%20printf\%28\%22\%25d\%5Cn\%22,\%20p-\%3Edata\%29\%3B\%0A\%20\%20delete_node\%28head-\%3Enext-\%3Enext\%29\%3B\%0A\%20\%20delete_node\%28tail\%29\%3B\%0A\%20\%20delete_node\%28head-\%3Enext\%29\%3B\%0A\%7D\%0A&mode=edit&origin=opt-frontend.js&py=c&rawInputLstJSON=\%5B\%5D}{可视化样例}
+    \end{itemize}
+\end{frame}
