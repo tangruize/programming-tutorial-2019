@@ -70,8 +70,9 @@ void *sbrk(intptr_t increment);
 \end{frame}
 
 \begin{frame}[fragile]{malloc实验教程}
-    下载 \href{http://problemoverflow.top/download/my\_malloc.zip}{my\_malloc.zip}, 解压后在 CLion 打开
     \begin{itemize}[<+- | alert@+>]
+        \item 下载 \href{http://problemoverflow.top/download/my\_malloc.zip}{my\_malloc.zip}, 解压后在 CLion 打开.
+        \item 由于使用了 Windows 不原生支持的 sbrk() 等函数, 请在 Linux 环境或 Cygwin 环境下进行实验 (MinGW 不能用)
         \item 编译运行test, 程序使用的标准库 malloc()
         \item 在 test.c 中找到并取消注释 \texttt{//\#define USE\_MY\_MALLOC}
         \item 编译运行test, 程序给出提示并异常退出
@@ -82,7 +83,7 @@ void *sbrk(intptr_t increment);
 \begin{frame}[fragile]{malloc实验教程}
     \begin{itemize}[<+- | alert@+>]
         \item 编译运行test, 程序正常执行, 对比使用标准库 malloc() 的输出
-        \item 我们的程序使用了大很多的内存
+        \item 我们的程序使用了很大的内存
         \item 原因是从 free\_list 删除一个结点时直接把 free\_list 赋为 NULL, 已申请的空间全部不能回收利用
         \item TODO: 实现 delete\_from\_free() 相关代码
     \end{itemize}
@@ -99,15 +100,16 @@ void *sbrk(intptr_t increment);
 \begin{frame}[fragile]{malloc实验教程}
     \begin{itemize}[<+- | alert@+>]
         \item 编译运行test, 根据你实现的不同, 程序运行起来可能超级慢! 而且内存使用不降反增!
-        \item 对内存切分造成了许多小的内存碎片
+        \item 对内存切分造成了许多小的内存碎片, 这些碎片难以分配出去且使得链表变长
+        \item 搜索 chunk 时如果有刚好相同或差不多大小的 chunk, 切分时可减少内存碎片
         \item TODO: 实现 find\_fit\_chunk() 相关代码, 使用best-fit搜索策略
     \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{malloc实验教程}
     \begin{itemize}[<+- | alert@+>]
-        \item 编译运行test, 程序变快了很多, 内存使用也减少了, 但运行仍然太慢
-        \item 内存碎片仍没有得到有效解决
+        \item 编译运行test, 程序变快了, 内存使用也减少了, 但运行仍然太慢
+        \item 内存碎片仍没有得到有效解决, 代码只切分 chunk 而很少合并
         \item TODO: 实现 add\_to\_free() 相关代码, 改进加入链表和合并策略
     \end{itemize}
 \end{frame}
@@ -125,6 +127,16 @@ void *sbrk(intptr_t increment);
     \begin{itemize}[<+- | alert@+>]
         \item 编译运行test, 速度只得到了小幅改进
         \item 还有什么可以改进的地方?
-        \item 请参看源代码 TODO advanced
+        \item 编译gprof, 查看函数调用执行时间和占比, 进一步优化你的程序
+        \item 更多可实现的地方请参看源代码 TODO advanced
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{一些问题还有吗?}
+    \begin{itemize}[<+- | alert@+>]
+        \item 能不能 free() 一部分, 比如 malloc() 得到的 ptr, \texttt{free(ptr + 1)}?
+        \item 能不能 free() 不是 malloc() 得到的指针?
+        \item 能不能 free() 同一个指针两次?
+        \item 好像越界一点点没问题?
     \end{itemize}
 \end{frame}

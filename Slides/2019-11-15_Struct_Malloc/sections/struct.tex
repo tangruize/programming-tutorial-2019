@@ -33,23 +33,23 @@ struct type_name {
     \begin{itemize}[<+- | alert@+>]
         \item 省略 object\_names, 可以用 \texttt{struct type\_name} 定义变量:
         \scriptsize\begin{verbatim}
-struct person_t {
-    char name[20];
-    int age;
-};
-struct person_t alice, bob;
+    struct person_t {
+        char name[20];
+        int age;
+    };
+    struct person_t alice, bob;
         \end{verbatim}
         \item 可以使用 typedef 简化掉 struct:
         \scriptsize\begin{verbatim}
-typedef struct person_t person_t;
-person_t alice, bob;
+    typedef struct person_t person_t;
+    person_t alice, bob;
         \end{verbatim}
         \item 省略 type\_name, 将不能再用该结构体定义别的变量(没有类型名):
         \scriptsize\begin{verbatim}
-struct {
-    char name[20];
-    int age;
-} alice, bob;
+    struct {
+        char name[20];
+        int age;
+    } alice, bob;
         \end{verbatim}
     \end{itemize}
 \end{frame}
@@ -58,15 +58,15 @@ struct {
     \begin{itemize}[<+- | alert@+>]
         \item 通过点\texttt{.}访问, 即 \texttt{object\_name.member}, 举例:
         \begin{verbatim}
-            alice.age = 20;
-            bob.age = 22;
+    alice.age = 20;
+    bob.age = 22;
         \end{verbatim}
         \item 结构体指针通过\texttt{->}访问, 即 \texttt{object\_ptr->member}, 举例:
         \begin{verbatim}
-            struct person_t *p = &alice;
-            p->age = 20;
+    struct person_t *p = &alice;
+    p->age = 20;
         \end{verbatim}
-        \item \texttt{object\_ptr->member} 等价于 \texttt{*(object\_ptr).member}
+        \item \texttt{object\_ptr->member} 等价于 \texttt{(*object\_ptr).member}
     \end{itemize}
 \end{frame}
 
