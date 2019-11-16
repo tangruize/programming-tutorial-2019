@@ -71,10 +71,10 @@ void *sbrk(intptr_t increment);
 
 \begin{frame}[fragile]{malloc实验教程}
     \begin{itemize}[<+- | alert@+>]
-        \item 下载 \href{http://problemoverflow.top/download/my\_malloc.zip}{my\_malloc.zip}, 解压后在 CLion 打开.
-        \item 由于使用了 Windows 不原生支持的 sbrk() 等函数, 请在 Linux 环境或 Cygwin 环境下进行实验 (MinGW 不能用)
+        \item 下载 \href{http://problemoverflow.top/download/my\_malloc.zip}{my\_malloc.zip}
         \item 编译运行test, 程序使用的标准库 malloc()
         \item 在 test.c 中找到并取消注释 \texttt{//\#define USE\_MY\_MALLOC}
+        \item 如果你使用的 Linux 环境或 Cygwin, 可以注释掉 \texttt{\#define NOT\_UNIX} (在 my\_malloc.h)
         \item 编译运行test, 程序给出提示并异常退出
         \item TODO: 你需要在 my\_malloc.c 文件实现 allocate\_more\_chunk() 相关代码
     \end{itemize}
@@ -138,5 +138,14 @@ void *sbrk(intptr_t increment);
         \item 能不能 free() 不是 malloc() 得到的指针?
         \item 能不能 free() 同一个指针两次?
         \item 好像越界一点点没问题?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{更多资料}
+    \begin{itemize}[<+- | alert@+>]
+        \item 较好的Linux系统编程书籍: \href{http://www.man7.org/tlpi/toc-detailed.html#ch_7}{tlpi ch7: MEMORY ALLOCATION}
+        \item 维基百科: \href{https://en.wikipedia.org/wiki/C_dynamic_memory_allocation}{C dynamic memory allocation}
+        \item 完全使用 mmap() 实现的 malloc(): \href{https://code.woboq.org/userspace/glibc/malloc/tst-interpose-aux.c.html}{tst-interpose-aux.c}
+        \item 最详细的 glibc 官方文档: \href{http://www.gnu.org/software/libc/manual/html_mono/libc.html#Memory-Allocation}{Memory-Allocation}
     \end{itemize}
 \end{frame}

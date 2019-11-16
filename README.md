@@ -17,6 +17,7 @@
 | 2019-10-25 | 环境搭建和C语言入门 | [introduction.pdf](https://github.com/tangruize/programming-tutorial-2019/releases/download/slide_1/introduction.pdf) |
 | 2019-11-01 | 调试技巧, 函数和数组 | [function_array.pdf](https://github.com/tangruize/programming-tutorial-2019/releases/download/slide_2/function_array.pdf) |
 | 2019-11-08 | 指针和动态内存 | [pointer_memory.pdf](https://github.com/tangruize/programming-tutorial-2019/releases/download/slide_3/pointer_memory.pdf) |
+| 2019-11-16 | 结构体和malloc实现 | [struct_malloc.pdf](https://github.com/tangruize/programming-tutorial-2019/releases/download/slide_4/struct_malloc.pdf) |
 
 ## [Tutorial](Tutorial)
 

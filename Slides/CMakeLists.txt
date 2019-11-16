@@ -21,5 +21,5 @@ add_custom_target(slides-pointer_memory.pdf
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 
 add_custom_target(slides-struct_malloc.pdf
-        COMMAND $(MAKE) DIR=2019-11-15_Struct_Malloc
+        COMMAND $(MAKE) DIR=2019-11-16_Struct_Malloc
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
