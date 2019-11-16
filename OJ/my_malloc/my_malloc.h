@@ -7,6 +7,12 @@
 
 #include <stddef.h>
 
+#define NOT_UNIX  /* 非 Linux 环境使用 malloc 来获取内存 */
+
+#ifdef NOT_UNIX
+void* sbrk(size_t increment);
+#endif
+
 /* struct my_malloc_chunk 定义了一个双向链表, 用于管理可分配的 chunk
 
  * 示意图

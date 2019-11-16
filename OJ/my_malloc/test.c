@@ -1,50 +1,64 @@
 #include <stdio.h>
-#include <unistd.h>     /* for sbrk(), sysconf() */
 #include <time.h>       /* for CLOCKS_PER_SEC */
-#include <sys/times.h>  /* for times() */
 #include <assert.h>     /* for assert() */
+#include "my_malloc.h"
+
+#ifndef NOT_UNIX
+#include <sys/times.h>  /* for times() */
+#include <unistd.h>     /* for sbrk(), sysconf() */
+static struct tms st_cpu;
+#endif
 
 //TODO: 将下面一行取消注释, 使用你的 my_malloc() 和 my_free()
-//#define USE_MY_MALLOC
+#define USE_MY_MALLOC
 #ifdef USE_MY_MALLOC
-#include "my_malloc.h"
-static void * (*malloc_func)(size_t) = my_malloc;  /* 使用 my_malloc() 获取动态内存 */
+static void* (*malloc_func)(size_t) = my_malloc;  /* 使用 my_malloc() 获取动态内存 */
 static void (*free_func)(void*) = my_free;
 #else
 #include <stdlib.h>
-static void * (*malloc_func)(size_t) = malloc;  /* 使用系统 malloc() */
+static void* (*malloc_func)(size_t) = malloc;  /* 使用系统 malloc() */
 static void (*free_func)(void*) = free;
 #endif
 
 static clock_t st_time;
-static struct tms st_cpu;
-static void * st_brk;
+static void* st_brk;
 
 /* 记录当前时钟和初始 brk */
 void start_clock() {
     st_brk = sbrk(0);  /* 参数 incr 为 0 返回当前 program break */
+#ifndef NOT_UNIX
     st_time = times(&st_cpu);  /* 获取程序运行时间相关数据 */
+#else
+    st_time = clock();
+#endif
 }
 
 /* 打印 brk 增长值和运行时间 */
-void end_clock(const char *msg, int i) {
+void end_clock(const char* msg, int i) {
+#ifndef NOT_UNIX
     struct tms en_cpu;
     clock_t en_time = times(&en_cpu);
     long clockTicks = sysconf(_SC_CLK_TCK);
+#else
+    clock_t en_time = clock();
+#endif
 
-    printf("Loop %i %s:\nHeap total increment: %ld\n", i, msg, (char *)sbrk(0) - (char *)st_brk);
-
+    printf("Loop %i %s:\nHeap total increment: %lld\n", i, msg, (long long)((char*)sbrk(0) - (char*)st_brk));
+    printf("Real Time: %.3f", (double)(en_time - st_time) / (double)CLOCKS_PER_SEC);
+#ifdef NOT_UNIX
+    printf("\n\n");
+#else
     /* real time: 实际运行时间, 真实流逝的时间
      * user time: 用户态运行时间, 可以理解为你写的代码运行的时间
      * system time: 内核态运行时间, 内核处理系统调用用的时间, 比如 sbrk()
      * 注意: real time != user time + system time,
      *       比如, 如果系统负载较大没有及时调度该程序, 二者可能相差很大 */
-    printf("Real Time: %.3f, User Time %.3f, System Time %.3f\n\n",
-           (double)(en_time - st_time) / (double)CLOCKS_PER_SEC,
-           (double)(en_cpu.tms_utime - st_cpu.tms_utime) / (double)clockTicks,
-           (double)(en_cpu.tms_stime - st_cpu.tms_stime) / (double)clockTicks);
-
+    printf(", User Time %.3f, System Time %.3f\n\n",
+            (double)(en_cpu.tms_utime - st_cpu.tms_utime) / (double)clockTicks,
+            (double)(en_cpu.tms_stime - st_cpu.tms_stime) / (double)clockTicks);
     st_cpu = en_cpu;
+#endif
+
     st_time = en_time;
 }
 
@@ -54,7 +68,7 @@ void malloc_test() {
 #define LOOP 5  /* 多少轮循环 */
 #define my_type_t long long
     int times = LOOP;
-    unsigned long long i, j, n, c;
+    long long i, j, n, c;
     my_type_t *lptr;
     char *cptr;
     static union {  /* 联合类型, 每个域使用相同的内存地址 */
@@ -104,7 +118,7 @@ void malloc_test() {
             ptrs[i].cptr = NULL;
         }
 
-        //TODO: 不定义宏 USE_MY_MALLOC 的情况下, 注释掉第90行 end_clock(), 下面一行注释掉与不注释的输出有什么不同?
+        //TODO: 不定义宏 USE_MY_MALLOC 的情况下, 注释掉前面的 end_clock(), 下面一行注释掉与不注释的输出有什么不同?
         free_func(ptrs[COUNT - 1].cptr);  /* 释放最后一个 */
 
         /* 打印总 brk 增长和这一轮运行时间 */

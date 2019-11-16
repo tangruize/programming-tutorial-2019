@@ -1,6 +1,27 @@
-#include <unistd.h>  /* 获得 sbrk() 的声明 */
 #include <assert.h>
 #include "my_malloc.h"  /* 获得相关结构体的声明 */
+
+#ifdef NOT_UNIX  /* 非 Linux 环境使用 malloc 来获取内存 */
+#include <stdlib.h>
+void* sbrk(size_t increment) {  /* 模拟 sbrk() */
+#define MALLOC_SIZE 256 * 1024 * 1024  /* 用 malloc 申请一块大内存作为 my_malloc() 能分配的最大空间 */
+    static unsigned char* program_break = NULL;
+    static unsigned char* limit = NULL;
+    if (program_break == NULL) {
+        program_break = (unsigned char*)malloc(MALLOC_SIZE);  /* 只分配一次 */
+        limit = program_break + MALLOC_SIZE;
+    }
+    if (increment == 0)
+        return program_break;
+    if (program_break + increment > limit)  /* 超过限制返回 -1 表示失败 */
+        return (void*)-1;
+    void* old_brk = (void*)program_break;
+    program_break += increment;
+    return old_brk;  /* 返回调整前的 brk */
+}
+#else
+#include <unistd.h>  /* 获得 sbrk() 的声明 */
+#endif
 
 #define MM_SIZE_SZ (sizeof(size_t))              /* 当前系统字长, 一般在32位系统中为4, 64位系统中为8 */
 #define MM_CHUNK_SIZE (sizeof(my_malloc_chunk))  /* 一个chunk的大小, 是 malloc() 分配的最小空间 */
@@ -163,7 +184,7 @@ void *my_malloc(size_t size) {
 /*TODO advanced: 当有一块较大的 chunk (大于一个特定值) 可释放时, 向系统归还该空间 */
 void my_free(void *ptr) {
     if (ptr) { /* 如果 ptr 不为 NULL */
-        my_malloc_chunk *chunk_ptr = (my_malloc_chunk *) PTR_OFFSET(ptr, -MM_ADDITIONAL_SIZE);
+        my_malloc_chunk *chunk_ptr = (my_malloc_chunk *) PTR_OFFSET(ptr, -(int)MM_ADDITIONAL_SIZE);
         assert(chunk_ptr->unused == MAGIC);  /* 检查 unused 是否被改变, 如果被改变将终止程序 */
         add_to_free(chunk_ptr);  /* 加入 free_list */
     }
