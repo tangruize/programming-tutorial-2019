@@ -2,11 +2,21 @@
 
 本项目是一个简易的C/C++编程指南，为南京大学计算机系问题求解课程2019级学生准备。往届的编程指南见[problem-solving-class-programming-tutorial](https://github.com/hengxin/problem-solving-class-programming-tutorial)。
 
-项目分为3个子项目：[OJ](OJ)、[Slides](Slides) 和 [Tutorial](Tutorial)，使用cmake管理，可以用CLion打开查看。
+项目分为3个子项目：[Code](Code)、[Slides](Slides) 和 [Tutorial](Tutorial)，使用cmake管理，可以用CLion打开查看。
 
-## [OJ](OJ)
+## [Code](Code)
 
-提供了一个管理 OJ 的 [CMakeLists.txt](OJ/CMakeLists.txt) 模板 和 方便调试的[输入输出重定向](OJ/lib)函数。也可以下载这个[压缩包](http://problemoverflow.top/download/OJ.zip)。
+教程所用到的示例代码。
+
+[oj](Code/oj): 提供了一个管理 OJ 的 [CMakeLists.txt](Code/oj/CMakeLists.txt) 模板。也可以下载这个[压缩包](http://problemoverflow.top/download/OJ.zip)。
+
+[redirect](Code/redirect): 方便调试的[输入输出重定向](Code/redirect/redirect.h)函数，使用样例 [example_c](Code/oj/example.c)。
+
+[pointer](Code/pointer): 第三次线下辅导 [PPT](Slides/2019-11-08_Pointer_Memory) 用到的源代码，参考了 [Pointers - C++ Tutorials](http://www.cplusplus.com/doc/tutorial/pointers/)。
+
+[struct](Code/struct): 第四次线下辅导 [PPT](Slides/2019-11-16_Struct_Malloc) 用到的源代码。
+
+[my_malloc](Code/my_malloc): 第四次线下辅导 [PPT](Slides/2019-11-16_Struct_Malloc) 的链表小实验。
 
 ## [Slides](Slides)
 

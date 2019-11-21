@@ -10,7 +10,7 @@ static struct tms st_cpu;
 #endif
 
 //TODO: 将下面一行取消注释, 使用你的 my_malloc() 和 my_free()
-#define USE_MY_MALLOC
+//#define USE_MY_MALLOC
 #ifdef USE_MY_MALLOC
 static void* (*malloc_func)(size_t) = my_malloc;  /* 使用 my_malloc() 获取动态内存 */
 static void (*free_func)(void*) = my_free;
@@ -43,7 +43,12 @@ void end_clock(const char* msg, int i) {
     clock_t en_time = clock();
 #endif
 
-    printf("Loop %i %s:\nHeap total increment: %lld\n", i, msg, (long long)((char*)sbrk(0) - (char*)st_brk));
+    printf("Loop %i %s:\n", i, msg);
+
+#if !defined(NOT_UNIX) || defined(USE_MY_MALLOC)
+    printf("Heap total increment: %lld\n", (long long)((char*)sbrk(0) - (char*)st_brk));
+#endif
+
     printf("Real Time: %.3f", (double)(en_time - st_time) / (double)CLOCKS_PER_SEC);
 #ifdef NOT_UNIX
     printf("\n\n");

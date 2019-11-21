@@ -1,0 +1,2 @@
+add_executable(1_forward_list 1_forward_list.c)
+add_executable(2_doubly_linked_list 2_doubly_linked_list.c)

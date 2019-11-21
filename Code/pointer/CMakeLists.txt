@@ -1,0 +1,6 @@
+add_executable(1_pointer_demo 1_pointer_demo.c)
+add_executable(2_pointer_array 2_pointer_array.c)
+add_executable(3_pointer_size 3_pointer_size.c)
+add_executable(4_pointer_to_pointer 4_pointer_to_pointer.c)
+add_executable(5_void_pointer 5_void_pointer.c)
+add_executable(6_function_pointer 6_function_pointer.c)

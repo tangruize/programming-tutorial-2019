@@ -9,7 +9,5 @@
 !Slides/*/*.bib
 !Slides/*/*/*.tex
 !Slides/*/*/*.png
-!OJ/lib/*
-!OJ/example.*
-/OJ/src/CMakeLists.txt
-!/OJ/my_malloc/*
+!Code/*
+!Code/*/*
