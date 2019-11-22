@@ -12,11 +12,13 @@
 
 [redirect](Code/redirect): 方便调试的[输入输出重定向](Code/redirect/redirect.h)函数，使用样例 [example_c](Code/oj/example.c)。
 
-[pointer](Code/pointer): 第三次线下辅导 [PPT](Slides/2019-11-08_Pointer_Memory) 用到的源代码，参考了 [Pointers - C++ Tutorials](http://www.cplusplus.com/doc/tutorial/pointers/)。
+[pointer](Code/pointer): [第三次线下辅导](Slides/2019-11-08_Pointer_Memory) 用到的源代码，参考了 [Pointers - C++ Tutorials](http://www.cplusplus.com/doc/tutorial/pointers/)。
 
-[struct](Code/struct): 第四次线下辅导 [PPT](Slides/2019-11-16_Struct_Malloc) 用到的源代码。
+[struct](Code/struct): [第四次线下辅导](Slides/2019-11-16_Struct_Malloc) 用到的源代码。
 
-[my_malloc](Code/my_malloc): 第四次线下辅导 [PPT](Slides/2019-11-16_Struct_Malloc) 的链表小实验。
+[my_malloc](Code/my_malloc): [第四次线下辅导](Slides/2019-11-16_Struct_Malloc) 的链表小实验, 实现malloc。
+
+[io](Code/io): [第五次线下辅导](Slides/2019-11-22_IO) 用到的源代码。
 
 ## [Slides](Slides)
 
@@ -46,6 +48,3 @@ make -j4  # 同上，但同时使用4个线程编译
 make -j4 slides  # 编译latex，需安装texlive、latexmk 和 xelatex
 make gitbook  # 生成gitbook的html并在本地打开4000端口服务器，需安装gitbook-cli
 ```
-
-## 其他
-线下程设辅导斗鱼房间号: [7725816](https://www.douyu.com/7725816), 开播时间: 每周五 20:30-22:00
