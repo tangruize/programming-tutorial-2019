@@ -1,0 +1,95 @@
+\section{Unix通用IO模型}\label{sec:unix_io_model}
+
+\begin{frame}[fragile]{Everything is a file}
+    \begin{itemize}[<+- | alert@+>]
+        \item Unix 一个重要的思想: \href{https://en.wikipedia.org/wiki/Everything_is_a_file}{一切都是文件}
+        \item 磁盘本身, 磁盘中的文件, 目录, 符号链接, 管道, 共享内存, 网络连接, 打印机等等都是文件
+        \item 通过 Unix 通用 IO 模型, 使用一套相同的 API 访问
+        \item \texttt{open()}, \texttt{close()}, \texttt{read()}, \texttt{write()} 等
+        \item 标准库函数如 \texttt{fopen()}, \texttt{fclose()}, \texttt{scanf()}, \texttt{printf()}, \texttt{fgets()}, \texttt{fputs()} 构建于上述 API 之上
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{文件描述符}
+    \begin{itemize}[<+- | alert@+>]
+        \item 一个整型(int)值, 也称为句柄(handler), 用于表示这个打开的文件
+        \item 文件描述符从 \texttt{open()} 系统调用获得
+        \item 通常, 进程被创建时会自动打开3个文件描述符:
+        \begin{itemize}
+            \item 0 (STDIN\_FILENO): 标准输入, 标准库对应文件流 stdin
+            \item 1 (STDOUT\_FILENO): 标准输出, 标准库对应文件流 stdout
+            \item 2 (STDERR\_FILENO): 标准错误, 标准库对应文件流 stderr
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{open()}}
+    \scriptsize
+    \begin{lstlisting}[language=c]
+    #include <sys/stat.h>
+    #include <fcntl.h>
+    int open(const char *pathname, int flags, ... /* mode_t mode */);
+      // Returns file descriptor on success, or –1 on error
+    \end{lstlisting}
+    \begin{table}[]
+        \begin{tabular}{|l|l|}
+            \hline
+            Flags & Description \\ \hline
+            O\_RDONLY & Open the file for reading only \\ \hline
+            O\_WRONLY & Open the file for writing only \\ \hline
+            O\_RDWR & Open the file for both reading and writing \\ \hline
+            O\_CREAT & Create file if it doesn’t already exist \\ \hline
+            O\_TRUNC & Truncate existing file to zero length \\ \hline
+            O\_APPEND & Writes are always appended to end of file \\ \hline
+        \end{tabular}
+        \caption{常用的flags}
+    \end{table}
+    \small
+    \begin{itemize}[<+- | alert@+>]
+        \item 如果 flag 指定了 O\_CREAT, 则 mode 参数必须提供用以设置文件权限
+        \item mode 参数: 比如 S\_IRWXU, S\_IRUSR, S\_IWUSR, S\_IXUSR
+        \item 错误返回-1, 绝大多数系统调用错误时返回-1, 且设置错误原因 errno
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{fopen()}的mode对应\texttt{open()}的flags}
+    \begin{table}[]
+        \begin{tabular}{|l|l|}
+            \hline
+            fopen() Mode & open() Flags \\ \hline
+            \texttt{"r"} or  \texttt{"rb"} & O\_RDONLY \\ \hline
+            \texttt{"w"} or  \texttt{"wb"} & O\_WRONLY|O\_CREAT|O\_TRUNC \\ \hline
+            \texttt{"a"} or  \texttt{"ab"} & O\_WRONLY|O\_CREAT|O\_APPEND \\ \hline
+            \texttt{"r+"}  or \texttt{"rb+"} or \texttt{"r+b"} & O\_RDWR \\ \hline
+            \texttt{"w+"}  or \texttt{"wb+"} or \texttt{"w+b"} & O\_RDWR|O\_CREAT|O\_TRUNC \\ \hline
+            \texttt{"a+"}  or \texttt{"ab+"} or \texttt{"a+b"} & O\_RDWR|O\_CREAT|O\_APPEND \\ \hline
+        \end{tabular}
+        \caption{\texttt{fopen()}的mode对应\texttt{open()}的flags}
+    \end{table}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{read()}, \texttt{write()} 和 \texttt{close()}}
+    \scriptsize
+    \begin{lstlisting}[language=c]
+        #include <unistd.h>
+        ssize_t read(int fd, void *buffer, size_t count);
+          // Returns number of bytes read, 0 on EOF, or –1 on error
+        ssize_t write(int fd, void *buffer, size_t count);
+          // Returns number of bytes written, or –1 on error
+        int close(int fd);
+          // Returns 0 on success, or –1 on error
+    \end{lstlisting}
+    \small
+    \begin{itemize}[<+- | alert@+>]
+        \item \texttt{read()} 从文件描述符 fd 读取最多 count 字节 到 buffer
+        \item \texttt{write()} 将 buffer 的 count 字节写入到文件描述符 fd
+        \item \texttt{close()} 关闭文件描述符 fd
+        \item 示例代码: \href{http://problemoverflow.top/download/io.zip}{3\_copy.c}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{获取帮助}
+    manpage: Linux自带\texttt{man}命令查询, 如: \texttt{man 2 open}
+
+    \href{http://problemoverflow.top/c/index.html#\%E7\%9B\%B8\%E5\%85\%B3\%E4\%B9\%A6\%E7\%B1\%8D\%E8\%B5\%84\%E6\%96\%99\%E6\%8E\%A8\%E8\%8D\%90}{problemoverflow.top/c的相关资料推荐}
+\end{frame}

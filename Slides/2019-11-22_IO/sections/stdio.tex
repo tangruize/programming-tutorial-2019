@@ -1,0 +1,179 @@
+\section{标准库文件相关函数}\label{sec:stdio}
+
+\begin{frame}[fragile]{常用的文件访问函数}
+    % Please add the following required packages to your document preamble:
+    % \usepackage{multirow}
+    \begin{table}[]
+        \small
+        \begin{tabular}{|l|l|l|}
+            \hline
+            & 函数名 & 功能 \\ \hline
+            \multicolumn{1}{|c|}{\multirow{4}{*}{文件访问}} & \texttt{fopen()} & 打开文件 \\ \cline{2-3}
+            \multicolumn{1}{|c|}{} & \texttt{fclose()} & 关闭文件 \\ \cline{2-3}
+            \multicolumn{1}{|c|}{} & \texttt{fflush()} & 刷新输出流缓冲区 \\ \cline{2-3}
+            \multicolumn{1}{|c|}{} & \texttt{setvbuf()} & 设置文件流缓冲区 \\ \hline
+            \multicolumn{1}{|c|}{\multirow{2}{*}{直接输入/输出}} & \texttt{fread()} & 从文件读取 \\ \cline{2-3}
+            \multicolumn{1}{|c|}{} & \texttt{fwrite()} & 写入到文件 \\ \hline
+            \multicolumn{1}{|c|}{\multirow{4}{*}{无格式输入/输出}} & \texttt{fgetc()} & 从文件流获取一个字符 \\ \cline{2-3}
+            \multicolumn{1}{|c|}{} & \texttt{fputc()} & 将一个字符写入文件流 \\ \cline{2-3}
+            \multicolumn{1}{|c|}{} & \texttt{fgets()} & 从文件流获取一个字符串 \\ \cline{2-3}
+            \multicolumn{1}{|c|}{} & \texttt{fputs()} & 将一个字符串写入文件流 \\ \hline
+            \multicolumn{1}{|c|}{\multirow{2}{*}{有格式输入/输出}} & \texttt{fscanf()} & 从文件流读取格式化输入 \\ \cline{2-3}
+            \multicolumn{1}{|c|}{} & \texttt{fprintf()} & 打印格式化输出到文件流 \\ \hline
+            \multicolumn{1}{|c|}{\multirow{3}{*}{文件位置}} & \texttt{ftell()} & 返回当前文件位置 \\ \cline{2-3}
+            \multicolumn{1}{|c|}{} & \texttt{fseek()} & 重定位文件位置指示符 \\ \cline{2-3}
+            \multicolumn{1}{|c|}{} & \texttt{rewind()} & 将文件位置指示器移动到文件首 \\ \hline
+        \end{tabular}
+        \caption{常用的文件访问函数}
+    \end{table}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{fopen()}}
+    \scriptsize
+    \begin{lstlisting}[language=c]
+        FILE *fopen(const char *path, const char *mode);
+          // Returns a FILE pointer on success, or NULL on error
+    \end{lstlisting}
+    \begin{table}[]
+        \begin{tabular}{|l|l|l|l|l|}
+            \hline
+            mode & 含义 & 解释 & 若文件存在 & 若文件不存在 \\ \hline
+            \texttt{"r"} or \texttt{"rb"} & 读 & 打开文件以读取 & 从头读 & 打开失败 \\ \hline
+            \texttt{"w"} or \texttt{"wb"} & 写 & 创建文件以写入 & 销毁内容 & 创建新文件 \\ \hline
+            \texttt{"a"} or \texttt{"ab"} & 后附 & 后附到文件 & 写到结尾 & 创建新文件 \\ \hline
+            \texttt{"r+"} or \texttt{"rb+"} or \texttt{"r+b"} & 读扩展 & 打开文件以读/写 & 从头读 & 打开失败 \\ \hline
+            \texttt{"w+"} or \texttt{"wb+"} or \texttt{"w+b"} & 写扩展 & 创建文件以读/写 & 销毁内容 & 创建新文件 \\ \hline
+            \texttt{"a+"} or \texttt{"ab+"} or \texttt{"a+b"} & 后附扩展 & 打开文件以读/写 & 写到结尾 & 创建新文件 \\ \hline
+        \end{tabular}
+        \caption{fopen()的mode参数}
+    \end{table}
+    \footnotesize
+    \begin{itemize}[<+- | alert@+>]
+        \item I/O 流是 \texttt{FILE} 类型对象，只能通过 \texttt{FILE*} 类型指针访问及操作
+        \item \texttt{stdin}, \texttt{stdout}, \texttt{stderr} 类型是 \texttt{FILE*}
+        \item \texttt{"r"}为read, \texttt{"w"}为write, \texttt{"a"}为append, \texttt{"b"}为binary
+        \item \texttt{"b"}在所有的 POSIX 实现中无意义, 直接被忽略
+        \item Windows系统输入文本文件时将 \textbackslash r\textbackslash n替换为 \textbackslash n, 输出将 \textbackslash n 替换为 \textbackslash r\textbackslash n
+        \item 如果用 \texttt{"b"} 打开则不会做这样的转换, 为了兼容性和易读性, 建议打开二进制文件时添加 \texttt{"b"}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{fclose()}}
+    \begin{lstlisting}[language=c]
+    int fclose(FILE *stream);
+      // Returns 0 on success, or EOF on error
+    \end{lstlisting}
+    不使用文件时用\texttt{fclose()}关闭
+
+    无论该函数返回什么, 被关闭的stream后续都不能再使用
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{fflush()} 和 \texttt{setvbuf()}}
+    \scriptsize
+    \begin{lstlisting}[language=c]
+        int fflush(FILE *stream);
+          // Returns 0 on success, or EOF on error
+        int setvbuf(FILE *stream, char *buf, int mode, size_t size);
+          // Returns 0 on success, or nonzero on error
+    \end{lstlisting}
+    \begin{table}[]
+        \begin{tabular}{|l|l|}
+            \hline
+            mode & 含义 \\ \hline
+            \_IOFBF & 全缓冲：当缓冲区为空时，从流读入数据。或者当缓冲区满时，向流写入数据。 \\ \hline
+            \_IOLBF & 行缓冲：每次从流中读入一行数据或向流中写入一行数据。 \\ \hline
+            \_IONBF & 无缓冲：直接从流中读入数据或直接向流中写入数据，缓冲设置无效。 \\ \hline
+        \end{tabular}
+        \caption{setvbuf()的mode参数}
+    \end{table}
+    \small
+    \begin{itemize}[<+- | alert@+>]
+        \item 系统调用开销很大, 标准库函数不会一个字节一个字节地读取/写入文件
+        \item \texttt{setvbuf()} 函数修改缓冲方式和缓冲区大小, 性能测试代码: \href{http://problemoverflow.top/download/io.zip}{2\_setvbuf.c}
+%        \item \texttt{setbuf(fp, buf);} 函数等价于 \texttt{setvbuf(fp, buf, (buf != NULL) ? \_IOFBF: \_IONBF, BUFSIZ);}
+        \item 文件默认缓冲方式为全缓冲, 终端默认为行缓冲, stderr默认为无缓冲
+        \item 同时使用stdout和stderr打印到终端或重定向到文件, 打印出的顺序可能与程序逻辑不同
+        \item \texttt{fflush()} 可以立即刷新输出缓冲区
+        \item 即使刷新了缓冲区, 也不保证文件写入了磁盘, 因为内核也有缓冲区
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{fread()} 和 \texttt{fwrite()}}
+    \scriptsize
+    \begin{lstlisting}[language=c]
+    size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream);
+    size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream);
+      // Return the number of items read or written
+    \end{lstlisting}
+    \small
+    \begin{itemize}[<+- | alert@+>]
+        \item 读取/写入字节, ptr类似于数组, size为一个元素大小, nmemb为元素个数, stream为对应文件
+        \item 返回值表示读/写成功了多少个元素, 可能不等于nmemb (读取到文件尾, 写入错误等)
+        \item 与格式化字符串的输入输出相比, \texttt{fread()}/\texttt{fwrite()}比较底层
+        \item 通常用于二进制文件读取, 比如直接把 \texttt{int} 类型的机器表示写入文件
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{fgetc()}, \texttt{fgets()} 和 \texttt{fputc()}, \texttt{fputs()}}
+    \scriptsize
+    \begin{lstlisting}[language=c]
+        int fgetc(FILE *stream);
+        char *fgets(char *s, int size, FILE *stream);
+        int fputc(int c, FILE *stream);
+        int fputs(const char *s, FILE *stream);
+    \end{lstlisting}
+    \small
+    \begin{itemize}[<+- | alert@+>]
+        \item \texttt{fgetc()} 从 stream 读取一个字符, 强制类型转换为 int 返回, 或返回 EOF
+        \item \texttt{fgets()} 从 stream 读取一行内容 (最多 size-1 个字符) 存储在 s, 换行符也被存储在 s 中
+        \item 任何条件下都不要使用 \texttt{gets()} 函数
+        \item \texttt{fputc()} 将字符 c 输出到 stream
+        \item \texttt{fputs()} 将字符串 s 输出到 stream
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{fscanf()} 和 \texttt{fprintf()}}
+    \scriptsize
+    \begin{lstlisting}[language=c]
+        int fprintf(FILE *stream, const char *format, ...);
+        int fscanf(FILE *stream, const char *format, ...);
+    \end{lstlisting}
+    \small
+    \begin{itemize}[<+- | alert@+>]
+        \item stream为要格式化输出或格式化读取的文件流
+        \item 其他参数与 \texttt{printf()} 和\texttt{scanf()} 相同
+        \item \texttt{fprintf(stdout, ...);} 等价于 \texttt{printf(...);}
+        \item 其他类似函数:
+        \scriptsize
+        \begin{lstlisting}[language=c]
+int sscanf(const char *str, const char *format, ...);
+int sprintf(char *str, const char *format, ...);
+int snprintf(char *str, size_t size, const char *format, ...);
+        \end{lstlisting}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{ftell()}, \texttt{fseek()} 和 \texttt{rewind()}}
+    \scriptsize
+    \begin{lstlisting}[language=c]
+long ftell(FILE *stream);
+  // Returns current value of the file-position indicator or -1L on error
+int fseek(FILE *stream, long offset, int whence);
+  // Returns 0 on success, or nonzero on error
+void rewind(FILE *stream);
+  // Equivalent to fseek(stream, 0L, SEEK_SET);
+    \end{lstlisting}
+    \small
+    \begin{itemize}[<+- | alert@+>]
+        \item \texttt{ftell()} 返回stream的文件位置指示器的值
+        \item \texttt{fseek()} 将stream的文件位置设置到 whence 后偏移 offset 处
+        \item whence: SEEK\_SET (文件头), SEEK\_CUR (当前位置), SEEK\_END (文件尾)
+        \item \texttt{rewind()} 等价于 \texttt{fseek(stream, 0L, SEEK\_SET);}
+        \item 获取文件大小:
+        \scriptsize\begin{lstlisting}[language=c]
+fseek(fp, 0, SEEK_END);
+long file_size = ftell(fp);
+        \end{lstlisting}
+        \item 示例代码: \href{http://problemoverflow.top/download/io.zip}{1\_io.c}
+    \end{itemize}
+\end{frame}
